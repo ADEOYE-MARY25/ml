@@ -5,8 +5,17 @@ import pandas as pd
 import joblib
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="MARYMAY FRUITS PAGE")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
@@ -20,6 +29,10 @@ class Data(BaseModel):
     taste: int
 
 @app.get("/")
+def home():
+    return {"message": "welcome to fruit classification API"}
+
+@app.get("/health")
 def home():
     return {"message": "welcome to fruit classification API"}
 
